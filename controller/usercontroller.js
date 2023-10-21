@@ -62,7 +62,7 @@ exports.login = async (req,res,next)=>{
     try{
         //console.log(req.body)
         if(isStringInvalid(req.body.email)||isStringInvalid(req.body.password)){
-            return res.status(400).json({err:"Bad Parameters, Missing"});
+            return res.status(400).json({message:"Bad Parameters, Missing Fields"});
         }
 
         var result = await user.findAll({where:{email:req.body.email}})
@@ -74,11 +74,11 @@ exports.login = async (req,res,next)=>{
                 if(resultPass===true){
                     res.status(201).json({message:"Successfully logged in", token:generateAccessToken(result[0].dataValues.id,result[0].dataValues.username,result[0].dataValues.ispremiumuser)})
                 } else{
-                    return res.status(400).json({err: "Incorrect Password"})
+                    return res.status(400).json({message: "Incorrect Password"})
                 }
             })
         }else{
-            return res.status(404).json({err:"User doesnt exist"})
+            return res.status(404).json({message:"User doesnt exist"})
         }
             
         //console.log(result[0].dataValues)

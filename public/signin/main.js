@@ -31,7 +31,8 @@ async function signin(e){
     catch(err){
         console.log(err)
           console.log(err.response.data[0])
-          signinform.appendChild(document.createTextNode(err))         
+          document.getElementById("error").textContent=err.response.data.message;
+          //signinform.appendChild(document.createTextNode(err))         
     };
 }
 
