@@ -40,20 +40,17 @@ header{
     background-color: white;
     grid-column: span 3;
     grid-row: span 10;
-    padding: 20px;
+    padding: 50px;
+    overflow: auto;
 }
-#box-1 label{
-    margin-left: 10px;
-}
-#box-1 button{
-    background-color: #3498db;
-    margin-left: 10px;
-    cursor: pointer;
-    width: 100px;
-    height: 25px;
-    border: none;
+#box-1 .messages{
+    background-color: rgb(232, 234, 240);
+    width:max-content;
+    padding: 1px 5px;
+    border: 1px solid #cccc;
     border-radius: 4px;
-    font-family: 'Lato', sans-serif;
+    box-shadow: 2px 2px 5px #3498db;
+    margin: 5px;
 }
 
 #box-2{

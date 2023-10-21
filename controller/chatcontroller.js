@@ -6,11 +6,11 @@ const chats = require('../models/chats')
 exports.addChat= async (req,res,next)=>{
 
         try{
-        await chats.create({
+        const chat = await chats.create({
             text:req.body.chatmessage,
             userId:req.user.dataValues.id
         })
-        res.status(201).json({message:'success'});
+        res.status(201).json({newchat:chat.dataValues});
 
         }
         catch(err)
@@ -20,4 +20,17 @@ exports.addChat= async (req,res,next)=>{
         }
         
         
+    }
+
+    exports.getChat= async (req,res,next)=>{
+
+        try{
+            var result = await chats.findAll();
+            res.json({
+                result
+            })
+        }catch(err){
+            console.log(err);
+        }
+                
     }
