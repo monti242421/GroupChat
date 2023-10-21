@@ -1,0 +1,149 @@
+@import url('https://fonts.googleapis.com/css2?family=Lato:wght@700&display=swap');
+
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body{
+    font-family: 'Lato', sans-serif;
+}
+
+.outer-box{
+    width: 100vw;
+    height: 100vh;
+    background-color: azure;
+}
+
+header{
+    background-color:darkred;
+    color: white;
+    font-size: 2rem;
+    padding: 10px;
+    margin-bottom: 10px;
+}
+
+.main-body{
+    display: grid;
+    gap: 10px;
+    grid-template-columns: repeat(4,1fr);
+    grid-auto-rows: 90px;
+}
+
+.box{
+    background-color: aliceblue;
+    border: 2px solid #cccc;
+    border-radius: 8px;
+}
+
+#box-1{
+    grid-column: span 3;
+    padding: 20px;
+}
+#box-1 label{
+    margin-left: 10px;
+}
+#box-1 button{
+    background-color: #3498db;
+    margin-left: 10px;
+    cursor: pointer;
+    width: 100px;
+    height: 25px;
+    border: none;
+    border-radius: 4px;
+    font-family: 'Lato', sans-serif;
+}
+
+#box-2{
+    background-color:gold;
+    padding: 20px;
+}
+
+#box-2 button{
+    background-color:rgb(11, 255, 11);
+    cursor: pointer;
+    width: 100px;
+    height: 25px;
+    border: none;
+    border-radius: 4px;
+    font-family: 'Lato', sans-serif;
+}
+
+#box-2  input[type="button"]{
+    background-color:rgb(11, 166, 255);
+    cursor: pointer;
+    margin: 2px;
+    padding: 5px;
+    border: none;
+    border-radius: 4px;
+    font-family: 'Lato', sans-serif;
+}
+#box-2 #message{
+    margin: 10px;
+}
+
+
+#box-3{
+    grid-column: span 3;
+    grid-row: span 4;
+    padding: 20px;
+    position: relative;
+}
+
+#downloadexpense{
+    background-color: #3498db;
+    cursor: pointer;
+    width: 100px;
+    height: 30px;
+    border: none;
+    border-radius: 4px;
+    font-family: 'Lato', sans-serif;
+    position: absolute;
+    top: 0;
+    right: 0;
+    margin: 10px;
+}
+li{
+    border: 1px solid #cccc;
+    padding: 4px;
+    margin: 2px;
+    display: flex;
+    justify-content:space-between;
+}
+
+li .btn-danger{
+    background-color: #3498db;
+    cursor: pointer;
+    width: 60px;
+    height: 30px;
+    border: none;
+    border-radius: 4px;
+    font-family: 'Lato', sans-serif;
+}
+#box-4{
+    grid-row: span 4;
+    padding: 20px;
+}
+
+#box-5{
+    border: 0;
+    grid-column: span 3;
+    background-color: white;
+    position: relative;
+}
+#box-5 #pagination{
+    position: absolute;
+    left: 50%;
+    display: inline;
+}
+#box-5 #pagination button{
+    background-color: #abd7f5;
+    cursor: pointer;
+    width: 20px;
+    height: 20px;
+    margin: 5px;
+    border: none;
+    border-radius: 2px;
+    font-family: 'Lato', sans-serif;
+}
