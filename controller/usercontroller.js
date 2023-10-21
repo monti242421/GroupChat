@@ -41,8 +41,9 @@ exports.addUser= async (req,res,next)=>{
         res.status(201).json({message:'successfully created new user'});
 
         }catch(err){
-        console.log(err)
-        res.status(500).json({message:err.errors[0].message});
+        console.log(err.name)
+        if(err.name=='SequelizeUniqueConstraintError')
+        res.status(500).json({message:'User already exists'});
         }
         
 
