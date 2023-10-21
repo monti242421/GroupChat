@@ -12,11 +12,11 @@ function isStringInvalid(string){
 }
 
 exports.generateAccessToken = (id,username,ispremiumuser)=>{
-    return jwt.sign({userId:id, username:username,ispremiumuser},'secretkeyitcanbeanything')
+    return jwt.sign({userId:id, username:username,ispremiumuser},process.env.TOKEN_SECRET)
 }
 
 function generateAccessToken (id,username,ispremiumuser){
-    return jwt.sign({userId:id, username:username,ispremiumuser},'secretkeyitcanbeanything')
+    return jwt.sign({userId:id, username:username,ispremiumuser},process.env.TOKEN_SECRET)
 }
 
 
