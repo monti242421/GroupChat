@@ -1,30 +1,19 @@
-var form = document.getElementById("expenseform");
-var items = document.getElementById("items");
-form.addEventListener('submit',addexpense);
-items.addEventListener('click',removeItem);
 
 
-async function addexpense(e){
+document.getElementById('sendmessage').onclick = async function addexpense(e){
         e.preventDefault();
-        var amount = document.getElementById("amount").value;
-        var description = document.getElementById("description").value;
-        var category = document.getElementById("category").value;
-       
-
-
+        const chatmessage = document.getElementById("chatmessage").value
         var myobj = {
-            amount : amount,
-            description: description,
-            category: category
+            chatmessage : chatmessage
         };
-
-        try{
+        try {
             const token = localStorage.getItem("token")
-            var res = await axios.post("http://localhost:4000/expense/addexpense",myobj,{headers:{"Authoriztion":token}})
+            var res = await axios.post("http://localhost:4000/chats/addchat",myobj,{headers:{"Authorization":token}})
                 console.log(res);
-                showDataToScreen(res.data.newexpense)   
+               // showDataToScreen(res.data.newexpense)   
             }         
-            catch(err){
+        catch(err)
+            {
                   console.log(err)
             };
 
@@ -181,70 +170,7 @@ async function removeItem(e){
     
 }
 
-document.getElementById('rzr-button1').onclick = async function(e){
-console.log("razor");
-const token = localStorage.getItem("token");
-const response = await axios.get("http://localhost:4000/purchase/premiummembership",{headers:{"Authoriztion":token}})
-console.log(response);
-var options={
-    "key":response.data.key_id,
-    "order_id":response.data.order.id,
-    "handler":async function(response){
-       var result = await axios.post("http://localhost:4000/purchase/updatetransactionstatus",
-        {
-            order_id:options.order_id,
-            payment_id:response.razorpay_payment_id
-        },{headers:{"Authoriztion":token}})
-        console.log("result"+result);
-        alert("You are premium user now");
-        showpreiumusermessage()
-        console.log(result.data);
-        showLeaderboard();
-        localStorage.setItem('token', result.data.token)
-    }
-
-}
-
-const rzp1 = new Razorpay(options);
-rzp1.open();
-e.preventDefault();
-
-rzp1.on('payment.failed',function(response){
-    console.log(response);
-    alert('Something went wrong');
-
-})
-}
 function showError(err){
     document.body.innerHTML += `<div style="color:red;"> ${err}</div>`
 }
 
-async function download(){
-    console.log("download")
-    try{
-        const token = localStorage.getItem("token")
-        var response =  await axios.get('http://localhost:4000/user/download', {headers:{"Authoriztion":token}})
-        if(response.status === 200){
-            //the bcakend is essentially sending a download link
-            //  which if we open in browser, the file would download
-            var a = document.createElement("a");
-            a.href = response.data.fileURL;
-            a.download = 'myexpense.csv';
-            a.click();
-        } else {
-            throw new Error(response.data.message)
-        }
-
-    }catch(err) {
-        showError(err)       
-    };
-}
-
-document.getElementById('pagelimitbutton').onclick =async function(e){
-    var pagelimit = document.getElementById('pagelimit').value;
-    if(pagelimit>7){
-        pagelimit=7
-    }
-    document.getElementById('pagelimitvalue').innerHTML=pagelimit;
-    localStorage.setItem('pagelimit',pagelimit);
-}

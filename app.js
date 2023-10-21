@@ -13,9 +13,11 @@ app.use(cors());
 
 const userRoute = require('./routes/user');
 const forgotpasswordRoute = require('./routes/forgotpassword');
+const chatsRoute = require('./routes/chats');
 
 const user = require('./models/user');
 const forgetpassword = require('./models/forgotpassword');
+const chats = require('./models/chats');
 
 app.use(bodyParser.json({extended:false}));
 
@@ -23,7 +25,11 @@ app.use(bodyParser.json({extended:false}));
 user.hasMany(forgetpassword);
 forgetpassword.belongsTo(user);
 
+user.hasMany(chats);
+chats.belongsTo(user);
+
 app.use(userRoute);
+app.use(chatsRoute)
 //app.use(forgotpasswordRoute);
 // app.use((req,res)=>{
 //     console.log(req.url);
