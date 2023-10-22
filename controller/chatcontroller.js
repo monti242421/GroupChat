@@ -1,6 +1,6 @@
 const { where } = require('sequelize');
 const chats = require('../models/chats')
-
+const Sequelize = require('sequelize');
 
 
 exports.addChat= async (req,res,next)=>{
@@ -25,7 +25,12 @@ exports.addChat= async (req,res,next)=>{
     exports.getChat= async (req,res,next)=>{
 
         try{
-            var result = await chats.findAll();
+            var result = await chats.findAll(
+                { 
+                    limit: 10 ,
+                    order: [[Sequelize.col('id'),'DESC']]
+                }
+            );
             res.json({
                 result
             })

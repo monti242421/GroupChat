@@ -9,8 +9,14 @@ document.getElementById('sendmessage').onclick = async function addexpense(e){
         try {
             const token = localStorage.getItem("token")
             var res = await axios.post("http://localhost:4000/chats/addchat",myobj,{headers:{"Authorization":token}})
-                console.log(res);
-                //showDataToScreen(res.data.newchat)   
+                //console.log(res.data.newchat);
+                const recentchats = JSON.parse(localStorage.getItem('recentchats'));
+                recentchats.pop();
+                recentchats.unshift(res.data.newchat)
+
+                //console.log(recentchats);
+                localStorage.setItem('recentchats',JSON.stringify(recentchats));
+                   
             }         
         catch(err)
             {
@@ -42,29 +48,32 @@ function parseJwt (token) {
     return JSON.parse(jsonPayload);
 }
 
-async function getchats(){
+async function getchatsfirsttime(){
     try{
         const token = localStorage.getItem("token")
-        const decodedtoken = parseJwt(token);
-        var res =await axios.get("http://localhost:4000/chats/getchat/",{headers:{"Authorization":token}})
-        console.log(res);
-        document.getElementById('box-1').innerHTML='';
-        for( var i=0;i<res.data.result.length;i++){
-            showDataToScreen(res.data.result[i]);
-        }
+        var recentchats = await axios.get("http://localhost:4000/chats/getchat/",{headers:{"Authorization":token}})
+        localStorage.setItem("recentchats",JSON.stringify(recentchats.data.result))
+        console.log("aasa");
+
     }catch(err){
         console.log(err);
     }
 
 }
 
-window.addEventListener("DOMContentLoaded", ()=>{
-    getchats();
-})
+getchatsfirsttime();
 
-setInterval(async ()=>{
-    getchats();
-},1000)
+async function getchats(){
+        const recentchats = JSON.parse(localStorage.getItem('recentchats'));
+        document.getElementById('box-1').innerHTML='';
+        for( var i=0;i<recentchats.length;i++){
+            showDataToScreen(recentchats[recentchats.length-1-i]);
+        }
+}
+
+window.addEventListener("DOMContentLoaded", getchats)
+
+setInterval(getchats,1000)
 
 
 
