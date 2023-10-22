@@ -10,7 +10,7 @@ document.getElementById('sendmessage').onclick = async function addexpense(e){
             const token = localStorage.getItem("token")
             var res = await axios.post("http://localhost:4000/chats/addchat",myobj,{headers:{"Authorization":token}})
                 console.log(res);
-                showDataToScreen(res.data.newchat)   
+                //showDataToScreen(res.data.newchat)   
             }         
         catch(err)
             {
@@ -41,22 +41,14 @@ function parseJwt (token) {
 
     return JSON.parse(jsonPayload);
 }
-function showpreiumusermessage(){
-        document.getElementById('rzr-button1').style.visibility="hidden";
-        document.getElementById('message').innerHTML="You are a premium user";
-}
 
-
-
-
-
-
-window.addEventListener("DOMContentLoaded",async ()=>{
+async function getchats(){
     try{
         const token = localStorage.getItem("token")
         const decodedtoken = parseJwt(token);
         var res =await axios.get("http://localhost:4000/chats/getchat/",{headers:{"Authorization":token}})
         console.log(res);
+        document.getElementById('box-1').innerHTML='';
         for( var i=0;i<res.data.result.length;i++){
             showDataToScreen(res.data.result[i]);
         }
@@ -64,27 +56,17 @@ window.addEventListener("DOMContentLoaded",async ()=>{
         console.log(err);
     }
 
+}
 
+window.addEventListener("DOMContentLoaded", ()=>{
+    getchats();
 })
 
-async function removeItem(e){
-    if(e.target.classList.contains("delete")){
-        try{
-        var li = e.target.parentElement;
-        var expenseId=li.id;
-        console.log(li.id);
-        var token = localStorage.getItem("token")
-        await axios.delete("http://localhost:4000/expense/deleteexpense/"+expenseId,{headers:{"Authoriztion":token}})
-        items.removeChild(li);
+setInterval(async ()=>{
+    getchats();
+},1000)
 
-        }catch(err){
-            console.log(err);
-        }
-        
 
-    }
-    
-}
 
 function showError(err){
     document.body.innerHTML += `<div style="color:red;"> ${err}</div>`
