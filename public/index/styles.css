@@ -26,84 +26,87 @@ header{
 
 .main-body{
     display: grid;
-    gap: 10px;
+    gap: 4px;
     grid-template-columns: repeat(4,1fr);
-    grid-auto-rows: 90px;
+    grid-auto-rows: 40px;
 }
 
 .box{
-    background-color: aliceblue;
     border: 2px solid #cccc;
     border-radius: 8px;
 }
 
 #box-1{
-    grid-column: span 3;
-    padding: 20px;
+    background-color: white;
+    grid-column: 1/4;
+    grid-row: span 10;
+    overflow: auto;
 }
-#box-1 label{
-    margin-left: 10px;
-}
-#box-1 button{
-    background-color: #3498db;
-    margin-left: 10px;
-    cursor: pointer;
-    width: 100px;
-    height: 25px;
-    border: none;
+#box-1 .messages{
+    background-color: rgb(232, 234, 240);
+    width:max-content;
+    padding: 1px 5px;
+    border: 1px solid #cccc;
     border-radius: 4px;
+    box-shadow: 2px 2px 5px #3498db;
+    margin: 5px;
+    margin-left: 30px;
+    
+}
+
+#box-1 #groupmessages{
+    width: fit-content;
+    margin-top: 10px;
+    margin-left: 46%;
+    margin-bottom: 40px;
+    padding: 5px;
+    background-color:crimson;
+    color: white;
     font-family: 'Lato', sans-serif;
+    border: 1px solid #cccc;
+    border-radius: 4px;
 }
 
 #box-2{
-    background-color:gold;
+    background-color:whitesmoke;
+    grid-column: 4/5;
+    grid-row: 1/8;
     padding: 20px;
 }
 
-#box-2 button{
-    background-color:rgb(11, 255, 11);
-    cursor: pointer;
-    width: 100px;
-    height: 25px;
-    border: none;
-    border-radius: 4px;
-    font-family: 'Lato', sans-serif;
+#box-4{
+    background-color: white;
+    grid-column: 4/5;
+    grid-row: 8/12;
+    padding-top: 4px;
+    padding-left: 10%;
 }
-
-#box-2  input[type="button"]{
-    background-color:rgb(11, 166, 255);
-    cursor: pointer;
-    margin: 2px;
-    padding: 5px;
-    border: none;
-    border-radius: 4px;
-    font-family: 'Lato', sans-serif;
-}
-#box-2 #message{
-    margin: 10px;
-}
-
 
 #box-3{
+    background-color: #20537e;
     grid-column: span 3;
-    grid-row: span 4;
-    padding: 20px;
+    /* grid-row: span 4; */
+    padding-top: 2px;
+    padding-left: 25%;
     position: relative;
 }
 
-#downloadexpense{
-    background-color: #3498db;
-    cursor: pointer;
-    width: 100px;
-    height: 30px;
-    border: none;
-    border-radius: 4px;
+#box-3  input[type="text"]{
+    width: 60%;
+    height: 90%;
     font-family: 'Lato', sans-serif;
-    position: absolute;
-    top: 0;
-    right: 0;
-    margin: 10px;
 }
+#box-3 button{
+    background-color:white;
+    height: 90%;
+    width: 70px;
+    font-family: 'Lato', sans-serif;
+}
+#box-3 button:hover{
+    background-color:#3498db;
+    cursor: pointer;
+}
+
 li{
     border: 1px solid #cccc;
     padding: 4px;
@@ -121,29 +124,47 @@ li .btn-danger{
     border-radius: 4px;
     font-family: 'Lato', sans-serif;
 }
-#box-4{
-    grid-row: span 4;
-    padding: 20px;
+#box-4 p {
+    margin: 5px;
+}
+#box-4 p label{
+    display: block;
+}
+#box-4 button{
+    background-color:white;
+    padding: 5px;
+    font-family: 'Lato', sans-serif;
+}
+#box-4 button:hover{
+    background-color:#3498db;
+    cursor: pointer;
+}
+#box-4 input{
+    width: 100%;
+    font-family: 'Lato', sans-serif;
 }
 
-#box-5{
-    border: 0;
-    grid-column: span 3;
-    background-color: white;
-    position: relative;
+#box-2 h3{
+    margin-bottom: 10px;
+    border: 1px solid #cccc;
+    border-radius: 3px;
+    padding: 5px;
+    padding-left: 35%;
 }
-#box-5 #pagination{
-    position: absolute;
-    left: 50%;
-    display: inline;
-}
-#box-5 #pagination button{
-    background-color: #abd7f5;
-    cursor: pointer;
-    width: 20px;
-    height: 20px;
-    margin: 5px;
-    border: none;
-    border-radius: 2px;
+
+#box-2 button {
+    background-color:white;
+    margin-left:10px;
+    padding: 5px;
     font-family: 'Lato', sans-serif;
+    border: 1px solid #cccc;
+    border-radius: 4px;
+}
+#box-2 button:hover{
+    background-color:#3498db;
+    cursor: pointer;
+}
+
+#box-4 #error{
+    font-size: 0.8rem;
 }

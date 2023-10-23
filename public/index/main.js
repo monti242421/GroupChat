@@ -1,30 +1,34 @@
-var form = document.getElementById("expenseform");
-var items = document.getElementById("items");
-form.addEventListener('submit',addexpense);
-items.addEventListener('click',removeItem);
 
 
-async function addexpense(e){
+document.getElementById('sendmessage').onclick = async function addmessage(e){
         e.preventDefault();
-        var amount = document.getElementById("amount").value;
-        var description = document.getElementById("description").value;
-        var category = document.getElementById("category").value;
-       
-
-
+        const token = localStorage.getItem("token")
+        const chatmessage = document.getElementById("chatmessage").value
+        const groupname = document.getElementById("groupmessages").innerHTML
+        const decodedtoken = parseJwt(token);
         var myobj = {
-            amount : amount,
-            description: description,
-            category: category
+            chatmessage : decodedtoken.username+'- '+chatmessage,
+            groupname:groupname
         };
+        try {
+           
 
-        try{
-            const token = localStorage.getItem("token")
-            var res = await axios.post("http://localhost:4000/expense/addexpense",myobj,{headers:{"Authoriztion":token}})
-                console.log(res);
-                showDataToScreen(res.data.newexpense)   
+            var res = await axios.post("http://localhost:4000/chats/addchat",myobj,{headers:{"Authorization":token}})
+                //console.log(res.data.newchat);
+                const recentchats = JSON.parse(localStorage.getItem('recentchats'));
+                
+                
+                recentchats.unshift(res.data.newchat)
+                if(recentchats.length>10){
+                    recentchats.pop();
+                }
+
+                //console.log(recentchats);
+                localStorage.setItem('recentchats',JSON.stringify(recentchats));
+                   
             }         
-            catch(err){
+        catch(err)
+            {
                   console.log(err)
             };
 
@@ -33,32 +37,14 @@ async function addexpense(e){
 
 function showDataToScreen(data){
    
-    var category = data.category;
-    var description = data.description;
-    var amount = data.amount;
-    var li =document.createElement("li");
-    li.className="delete"
-    li.id = data.id;
-    var div1 = document.createElement("div");
-    div1.appendChild(document.createTextNode(amount));
-    div1.className="filecontent";
-    var div2 = document.createElement("div");
-    div2.appendChild(document.createTextNode(description));
-    div2.className="filecontent";
-    var div3 = document.createElement("div");
-    div3.appendChild(document.createTextNode(category));
-    div3.className="filecontent";
-
-   // li.appendChild(document.createTextNode(amount +"-"+description+"-"+category   ));
-   li.appendChild(div1);
-   li.appendChild(div2);
-   li.appendChild(div3);
-    var deletebtn = document.createElement("button");
-    deletebtn.className="btn btn-danger btn-sm btn-space delete";
-    deletebtn.appendChild(document.createTextNode("Del"));
-
-    li.appendChild(deletebtn);
-    items.appendChild(li);
+    var chat = data.text;
+    var div =document.createElement("div");
+    const token = localStorage.getItem('token');
+    const decodedtoken = parseJwt(token);
+    const username = decodedtoken.username;
+    div.className="messages"
+    div.innerHTML=chat;
+    document.getElementById('chatbox').appendChild(div);
 }
 
 function parseJwt (token) {
@@ -70,181 +56,121 @@ function parseJwt (token) {
 
     return JSON.parse(jsonPayload);
 }
-function showpreiumusermessage(){
-        document.getElementById('rzr-button1').style.visibility="hidden";
-        document.getElementById('message').innerHTML="You are a premium user";
-}
 
-function showLeaderboard(){
-    const inputElement = document.createElement("input");
-    inputElement.type = "button";
-    inputElement.value="Show Leaderboard";
-    inputElement.onclick = async() =>{
-        const token = localStorage.getItem('token');
-        const userLeaderBoardArray = await axios.get("http://localhost:4000/premium/showleaderboard",{headers:{"Authoriztion":token}})
-        console.log(userLeaderBoardArray);
-
-        var leaderboardElem = document.getElementById('leaderboard')
-        leaderboardElem.innerHTML +='<h1> Leader Board</h1>'
-        userLeaderBoardArray.data.forEach(userDetails => {
-            leaderboardElem.innerHTML +=`<li>Name - ${userDetails.username} :   Total Expense - ${userDetails.totalExpenses}`
-        });
-    }
-    document.getElementById("message").appendChild(inputElement);
-}
-
-
-var pagination = document.getElementById("pagination");
-function showPagination(currentPage,hasNextPage,nextPage,hasPreviosPage,previousPage,lastPage){
-    pagination.innerHTML = '';
-    if(hasPreviosPage){
-        const btn2 = document.createElement('button');
-        btn2.innerHTML=previousPage
-        btn2.addEventListener('click',()=>getProducts(previousPage))
-        pagination.appendChild(btn2);
-    }
-        const btn1 = document.createElement('button');
-        btn1.innerHTML=currentPage
-        btn1.addEventListener('click',()=>getProducts(currentPage))
-        pagination.appendChild(btn1);
-
-    if(hasNextPage){
-        const btn3 = document.createElement('button');
-        btn3.innerHTML=nextPage
-        btn3.addEventListener('click',()=>getProducts(nextPage))
-        pagination.appendChild(btn3);
-    }
-
-}
-
-async function getProducts(page){
-    try{    
-    items.innerHTML='';
-    var pagelimit=localStorage.getItem("pagelimit");
-    const token = localStorage.getItem("token")
-    var res =await axios.get("http://localhost:4000/expense/getexpense/"+page,{headers:{"Authoriztion":token},params:{pagelimit:pagelimit}})
-    showPagination(res.data.currentPage,res.data.hasNextPage,res.data.nextPage,res.data.hasPreviousPage,res.data.previousPage)
-    for( var i=0;i<res.data.result.length;i++){
-        showDataToScreen(res.data.result[i]);
-    }
-    document.getElementById('pagelimitvalue').innerHTML=pagelimit;
-    }
-    catch(err){
-        console.log(err);
-    }
-    
-}
-
-
-window.addEventListener("DOMContentLoaded",async ()=>{
+async function getchats(){
     try{
         const token = localStorage.getItem("token")
-        const decodedtoken = parseJwt(token);
-        //console.log(decodedtoken);
-        const ispremiumuser = decodedtoken.ispremiumuser;
-        if(ispremiumuser){
-            showpreiumusermessage();
-            showLeaderboard();
-        }
-        const page=1;
-        var pagelimit=localStorage.getItem("pagelimit");
-        var res =await axios.get("http://localhost:4000/expense/getexpense/"+page,{headers:{"Authoriztion":token},params:{pagelimit:pagelimit}})
-        console.log(res);
-        showPagination(res.data.currentPage,res.data.hasNextPage,res.data.nextPage,res.data.hasPreviousPage,res.data.previousPage)
-        for( var i=0;i<res.data.result.length;i++){
-            showDataToScreen(res.data.result[i]);
-        }
-        document.getElementById('pagelimitvalue').innerHTML=pagelimit;
+        var recentchats = await axios.get("http://localhost:4000/chats/getchat/",{headers:{"Authorization":token}})
+        localStorage.setItem("recentchats",JSON.stringify(recentchats.data.result))
+
     }catch(err){
         console.log(err);
     }
 
+}
 
-})
 
-async function removeItem(e){
-    if(e.target.classList.contains("delete")){
-        try{
-        var li = e.target.parentElement;
-        var expenseId=li.id;
-        console.log(li.id);
-        var token = localStorage.getItem("token")
-        await axios.delete("http://localhost:4000/expense/deleteexpense/"+expenseId,{headers:{"Authoriztion":token}})
-        items.removeChild(li);
-
-        }catch(err){
-            console.log(err);
+async function displaychats(){
+        const recentchats = JSON.parse(localStorage.getItem('recentchats'));
+        document.getElementById('chatbox').innerHTML='';
+        for( var i=0;i<recentchats.length;i++){
+            showDataToScreen(recentchats[recentchats.length-1-i]);
         }
-        
+}
 
+async function showmygroups(){
+    try{
+
+    
+    const token = localStorage.getItem("token")
+    var mygroups = await axios.get("http://localhost:4000/groups/getgroups/",{headers:{"Authorization":token}})
+    for(let i=0;i<mygroups.data.mynewgroups.length;i++){
+        displaygroups(mygroups.data.mynewgroups[i].name);
+    }
+    }catch(err){
+        console.log(err);
     }
     
 }
+window.addEventListener("DOMContentLoaded", getchats,displaychats,showmygroups())
 
-document.getElementById('rzr-button1').onclick = async function(e){
-console.log("razor");
-const token = localStorage.getItem("token");
-const response = await axios.get("http://localhost:4000/purchase/premiummembership",{headers:{"Authoriztion":token}})
-console.log(response);
-var options={
-    "key":response.data.key_id,
-    "order_id":response.data.order.id,
-    "handler":async function(response){
-       var result = await axios.post("http://localhost:4000/purchase/updatetransactionstatus",
-        {
-            order_id:options.order_id,
-            payment_id:response.razorpay_payment_id
-        },{headers:{"Authoriztion":token}})
-        console.log("result"+result);
-        alert("You are premium user now");
-        showpreiumusermessage()
-        console.log(result.data);
-        showLeaderboard();
-        localStorage.setItem('token', result.data.token)
-    }
+setInterval(displaychats,10)
 
-}
 
-const rzp1 = new Razorpay(options);
-rzp1.open();
-e.preventDefault();
 
-rzp1.on('payment.failed',function(response){
-    console.log(response);
-    alert('Something went wrong');
-
-})
-}
 function showError(err){
     document.body.innerHTML += `<div style="color:red;"> ${err}</div>`
 }
 
-async function download(){
-    console.log("download")
+document.getElementById('creategroup').onclick =async function createGroup (e){
+    e.preventDefault();
     try{
-        const token = localStorage.getItem("token")
-        var response =  await axios.get('http://localhost:4000/user/download', {headers:{"Authoriztion":token}})
-        if(response.status === 200){
-            //the bcakend is essentially sending a download link
-            //  which if we open in browser, the file would download
-            var a = document.createElement("a");
-            a.href = response.data.fileURL;
-            a.download = 'myexpense.csv';
-            a.click();
-        } else {
-            throw new Error(response.data.message)
-        }
+    const groupname= document.getElementById('groupname').value
 
-    }catch(err) {
-        showError(err)       
+    var myobj = {
+        groupname : groupname
     };
+    const token = localStorage.getItem("token")
+    var res = await axios.post("http://localhost:4000/groups/addgroup",myobj,{headers:{"Authorization":token}})
+
+    displaygroups(groupname);
+
+    document.getElementById("error").textContent="New Group Created"
+}catch(err){
+          console.log(err)
+          document.getElementById("error").textContent=err.response.data.message;
+}
 }
 
-document.getElementById('pagelimitbutton').onclick =async function(e){
-    var pagelimit = document.getElementById('pagelimit').value;
-    if(pagelimit>7){
-        pagelimit=7
-    }
-    document.getElementById('pagelimitvalue').innerHTML=pagelimit;
-    localStorage.setItem('pagelimit',pagelimit);
+document.getElementById('inviteuser').onclick =async function invite (e){
+    e.preventDefault();
+    try{
+    const groupname= document.getElementById('groupname').value
+    const inviteemail= document.getElementById('inviteemail').value
+
+    var myobj = {
+        groupname : groupname,
+        inviteemail:inviteemail
+    };
+    const token = localStorage.getItem("token")
+    var res = await axios.post("http://localhost:4000/groups/groupinvite",myobj,{headers:{"Authorization":token}})
+
+    document.getElementById("error").textContent="User Added"
+
+}catch(err){
+          console.log(err)
+          document.getElementById("error").textContent=err.response.data.message;
+}
+}
+
+function displaygroups(groupname){
+    const button = document.createElement('button');
+    button.className="newgroup"
+    
+    button.innerHTML=groupname;
+    document.getElementById('box-2').appendChild(button);
+}
+
+document.getElementById('box-2').addEventListener('click',groupchat);
+
+async function groupchat(e){
+        e.preventDefault();
+        if(e.target.classList.contains("newgroup")){
+            console.log(e.target.innerHTML);
+            try{
+                
+                const groupname= e.target.innerHTML
+                document.getElementById('groupmessages').innerHTML = groupname;
+            
+                var myobj = {
+                    groupname : groupname
+                };
+                const token = localStorage.getItem("token")
+                const thisgroupchat = await axios.post("http://localhost:4000/groups/getchats",myobj,{headers:{"Authorization":token}})
+                localStorage.setItem("recentchats",JSON.stringify(thisgroupchat.data.result))
+            }catch(err){
+                    console.log(err)
+            }
+        }
+
 }
