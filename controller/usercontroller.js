@@ -2,6 +2,9 @@ const { where } = require('sequelize');
 const user = require('../models/user')
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
+const admin=require('../models/admin')
+const groups = require('../models/groups')
+const admin_groups=require('../models/admin_groups')
 
 function isStringInvalid(string){
     if(string ==undefined || string.length===0){
@@ -37,6 +40,9 @@ exports.addUser= async (req,res,next)=>{
             email:req.body.email,
             phonenumber:req.body.phonenumber,
             password:hash
+        })
+
+        await admin.create({
         })
         res.status(201).json({message:'successfully created new user'});
 
@@ -84,6 +90,33 @@ exports.login = async (req,res,next)=>{
         //console.log(result[0].dataValues)
     }catch (err){
         res.status(500).send(err);
+    }
+}
+
+exports.makeAdmin = async (req,res,next)=>{
+    console.log(req.body);
+    try{
+        const userid = await user.findOne({
+            where:{username:req.body.username}
+        })
+        const groupid = await groups.findOne({
+            where:{name:req.body.groupname}
+        }) 
+
+        console.log(userid.dataValues.id)
+        await admin_groups.create({
+            adminId:userid.dataValues.id,
+            groupId:groupid.dataValues.id
+        })
+
+        res.status(201).json({message:'This user is admin now'});
+
+    }catch(err){
+
+        console.log(err);
+        if(err.name=='SequelizeUniqueConstraintError')
+        res.status(500).json({message:'This user is already Admin'});
+        
     }
 }
 
