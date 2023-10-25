@@ -3,68 +3,78 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Expense</title>
+    <title>Hello Talk</title>
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
     <div id="outer-box">
         <header>
-            <p>Expense Tracker</p>
+            <p>Hello Talk </p>
         </header>
         <div class="main-body">
 
             <div class="box" id="box-1">
-                <form action="" id="expenseform">
-                    <label for="">Expense Amount</label>
-                    <input type="number" id="amount" required>
-                    <label for="">Description</label>
-                    <input type="text" name="" id="description" required>
-                    <label for="">Choose a category</label>
-                    <select id="category" >
-                        <option value="Movie">Movie</option>
-                        <option value="Flight">Flight</option>
-                        <option value="Shooping">Shooping</option>
-                        <option value="Education">Education</option>
-                    </select> 
-                    <button type="submit">Add Expense</button>
-                </form>
-            
-            </div>
-            <div class="box" id="box-2">
-                <div id="message"></div>
-                <button id="rzr-button1">Buy Premium</button>
-            </div>
-
-            <div class="box" id="box-3">
-                <h2 class="title">Items</h2>
-                 <div id="items" class="list-group">
-                    <li>
-                    <h4 class="title">Amount</h4>
-                    <h4 class="title">Description</h4>
-                    <h4 class="title">Category</h4> 
-                    <h4>Delete It !</h4>
-                    </li>
-      
-                 </div>
-                 <button onclick="download()" id="downloadexpense">Download File</button>
-                
-            </div>
-            <div class="box" id="box-4">   
-                <div id="leaderboard"></div>
-            </div>
-
-            <div class="box" id="box-5">
-                <div class= "page" id="pagination"></div>
-                <div >
-                    <h4>Expenses per page</h4>
-                    <input type="number" min="5" max="7" placeholder="5 - 7" id="pagelimit">
-                    <button type="submit" id="pagelimitbutton">Set</button>
-                    <div id="pagelimitvalue"></div>
+                <div id="groupmessages">All users allowed</div>
+                <div id="chatbox">
+                    <!-- <div class="messages">Hi</div> -->
+                </div>
+                <div id="groupusers">
+                    <div id="loggedingroupname">Logged in group:  <span id="loggedgroupname"> None </span><span style="color: rgb(0, 255, 0);"> ●</span></div>
+                    <div id="allmembers">
+                        <!-- <label >admin1</label>
+                        <button>Del</button>
+                        <button>Make Admin</button> -->
+                        
+                    </div>
+                    <div id="members">All Group Members
+                        <p id="error2"></p>
+                    </div> 
                 </div>
                 
             </div>
+            <div class="box" id="box-2">
+                <h3>My Groups</h3>
+                <!-- <button class="newgroup">Group1</button> -->
+            </div>
+
+            <div class="box" id="box-3">
+                <input type="text" id="chatmessage" required>
+                <button type="submit" id="sendmessage">Send</button>
+            </div>
+            <div class="box" id="box-4">
+                <!-- <p>Online Users <span style="color: rgb(0, 255, 0);">●</span></p> -->
+                
+                <p>
+                    <label for="">Name of the Group</label>
+                    <input type="text"  id= "groupname" placeholder="Coding nextgen" required>
+                </p>
+
+                <p>
+                    <label for="">Add Other Users</label>
+                    <input type="email" id= "inviteemail" placeholder="abc@gmail.com" required>
+                    
+                </p>
+
+                <p>
+                    <input type="checkbox" idname="makeadmin" value="0" id="makeadmin">
+                    <label for="makeadmin" id="makeitblock"> Make this user a admin</label><br>
+
+                </p>
+
+                <p>            
+                    <button type="submit" id="creategroup">Create New Group</button>
+                    <button type="submit" id="inviteuser">Add other users</button>
+                </p>
+
+                <p id="error" style="color: red;">
+                </p>
+               
+               
+            </div>
             
          </div>
+
+         
 
     </div>
     
@@ -74,9 +84,9 @@
         
     
     
-    
+    <script src="/socket.io/socket.io.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
-    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+    
     <script src="main.js"></script>
     
 </body>
